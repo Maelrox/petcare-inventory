@@ -12,4 +12,6 @@ interface InventoryUseCase {
 
     fun getAllByFilterPaginated(filterDTO: InventoryFilterDTO, pageable: Pageable): Page<InventoryDTO>
 
+    fun updateInventory(inventories: List<InventoryDTO>, companyId: Long): ResponseDTO?
+
 }

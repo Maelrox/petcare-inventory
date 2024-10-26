@@ -33,6 +33,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
 	implementation("org.springframework.cloud:spring-cloud-starter-openfeign:4.1.3")
+	implementation("org.redisson:redisson-spring-boot-starter:3.17.0")
 	implementation("org.mapstruct:mapstruct:1.6.0.Beta2")
 	implementation("jakarta.validation:jakarta.validation-api:3.1.0")
 	implementation("com.google.guava:guava:33.2.1-jre")

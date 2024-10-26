@@ -12,30 +12,34 @@ import org.springframework.stereotype.Component
 @Component
 class InventoryRepositoryAdapter(
     private val jpaInventoryRepository: JpaInventoryRepository,
-    private val ownerMapper: InventoryEntityMapper
+    private val inventoryMapper: InventoryEntityMapper
 ) : InventoryPersistencePort {
 
     override fun findById(inventoryId: Long): Inventory {
         val ownerEntity = jpaInventoryRepository.findById(inventoryId)
             .orElseThrow { EntityNotFoundException("Inventory with id $inventoryId not found") }
-        return ownerMapper.toDomain(ownerEntity)
+        return inventoryMapper.toDomain(ownerEntity)
     }
 
     override fun update(inventory: Inventory): Inventory {
-        val inventoryEntity = ownerMapper.toEntity(inventory)
+        val inventoryEntity = inventoryMapper.toEntity(inventory)
         jpaInventoryRepository.save(inventoryEntity)
-        return ownerMapper.toDomain(inventoryEntity)
+        return inventoryMapper.toDomain(inventoryEntity)
+    }
+
+    override fun findByInventoryIdAndCompanyId(inventoryId: Long?, companyId: Long): Inventory? {
+        return inventoryMapper.toDomain(jpaInventoryRepository.findByInventoryIdAndCompanyId(inventoryId, companyId))
     }
 
     override fun save(inventory: Inventory): Inventory {
-        val inventoryEntity = ownerMapper.toEntity(inventory)
+        val inventoryEntity = inventoryMapper.toEntity(inventory)
         jpaInventoryRepository.save(inventoryEntity)
-        return ownerMapper.toDomain(inventoryEntity)
+        return inventoryMapper.toDomain(inventoryEntity)
     }
 
     override fun findAllByFilterPaginated(filter: Inventory, pageable: Pageable): Page<Inventory> {
         val pagedRolesEntity = jpaInventoryRepository.findAllByFilter(filter, pageable)
-        return pagedRolesEntity.map { ownerMapper.toDomain(it) }
+        return pagedRolesEntity.map { inventoryMapper.toDomain(it) }
     }
 
 }

@@ -5,8 +5,11 @@ import com.petcaresuite.inventory.application.dto.*
 import com.petcaresuite.inventory.application.port.input.InventoryUseCase
 import com.petcaresuite.inventory.application.service.modules.Modules
 import com.petcaresuite.inventory.infrastructure.security.Permissions
+import com.petcaresuite.inventory.infrastructure.exception.InsufficientInventoryException
 import jakarta.servlet.http.HttpServletRequest
+import org.hibernate.exception.LockAcquisitionException
 import org.springframework.data.domain.PageRequest
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -50,6 +53,25 @@ class InventoryController(private val inventoryUseCase: InventoryUseCase) {
         )
 
         return ResponseEntity.ok(paginatedResponse)
+    }
+
+    @PostMapping("/update")
+    @Permissions(Modules.INVENTORY, ModuleActions.UPDATE)
+    fun updateInventory(@RequestBody inventories: List<InventoryDTO>, request: HttpServletRequest): ResponseEntity<ResponseDTO> {
+        return try {
+            val companyId  = request.getAttribute("companyId").toString().toLong()
+            val result = inventoryUseCase.updateInventory(inventories, companyId)
+            ResponseEntity.ok(result)
+        } catch (e: Exception) {
+            when (e) {
+                is LockAcquisitionException -> ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(ResponseDTO(success = false, message = "Resource locked"))
+                is InsufficientInventoryException -> ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(ResponseDTO(success = false, message = "Insufficient inventory"))
+                else -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ResponseDTO(success = false, message = "Internal error"))
+            }
+        }
     }
 
 }

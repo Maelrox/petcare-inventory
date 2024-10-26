@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.query.Param
 
 interface JpaInventoryRepository : JpaRepository<InventoryEntity, Long> {
 
@@ -22,4 +21,7 @@ interface JpaInventoryRepository : JpaRepository<InventoryEntity, Long> {
             """
     )
     fun findAllByFilter(filter: Inventory, pageable: Pageable): Page<InventoryEntity>
+
+    fun findByInventoryIdAndCompanyId(inventoryId: Long?, companyId: Long): InventoryEntity
+
 }

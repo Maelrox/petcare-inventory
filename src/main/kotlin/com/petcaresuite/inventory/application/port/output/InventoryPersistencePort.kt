@@ -14,4 +14,6 @@ interface InventoryPersistencePort {
 
      fun update(inventory: Inventory): Inventory
 
+     fun findByInventoryIdAndCompanyId(inventoryId: Long?, companyId: Long): Inventory?
+
 }

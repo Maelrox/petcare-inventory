@@ -7,6 +7,6 @@ data class Inventory(
     val name: String?,
     val description: String?,
     val price: BigDecimal?,
-    val quantity: Int?,
+    var quantity: Int?,
     val companyId: Long?,
 )
