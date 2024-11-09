@@ -1,6 +1,6 @@
 package com.petcaresuite.inventory.interfaces.exception
 
-import com.petcaresuite.appointment.application.service.messages.InternalErrors
+import com.petcaresuite.inventory.application.service.messages.InternalErrors
 import com.petcaresuite.inventory.application.dto.ErrorResponseDTO
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -36,7 +36,7 @@ class RestExceptionHandler {
 
     @ExceptionHandler(Exception::class)
     fun handleGlobalException(ex: Exception): ResponseEntity<ErrorResponseDTO> {
-        var message = InternalErrors.UNHANDLED_EXCEPTION.format(ex.message)
+        val message = InternalErrors.UNHANDLED_EXCEPTION.format(ex.message)
         logger.error(message)
         val errorResponseDTO = ErrorResponseDTO(
             status = HttpStatus.INTERNAL_SERVER_ERROR.value(),

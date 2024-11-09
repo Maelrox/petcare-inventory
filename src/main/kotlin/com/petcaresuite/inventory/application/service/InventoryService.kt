@@ -1,5 +1,6 @@
 package com.petcaresuite.inventory.application.service
 
+import com.petcaresuite.inventory.application.service.messages.InternalErrors
 import com.petcaresuite.inventory.application.dto.*
 import com.petcaresuite.inventory.application.mapper.InventoryMapper
 import com.petcaresuite.inventory.application.port.input.InventoryUseCase
@@ -7,8 +8,11 @@ import com.petcaresuite.inventory.application.port.output.InventoryPersistencePo
 import com.petcaresuite.inventory.application.service.messages.Responses
 import com.petcaresuite.inventory.infrastructure.exception.InsufficientInventoryException
 import com.petcaresuite.inventory.infrastructure.exception.LockAcquisitionException
+import com.petcaresuite.inventory.interfaces.exception.RestExceptionHandler
 import jakarta.transaction.Transactional
 import org.redisson.api.RedissonClient
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -21,6 +25,8 @@ class InventoryService(
     private val redissonClient: RedissonClient
 ) :
     InventoryUseCase {
+
+    private val logger: Logger = LoggerFactory.getLogger(RestExceptionHandler::class.java)
 
     override fun save(inventoryDTO: InventoryDTO): ResponseDTO {
         val veterinary = inventoryMapper.toDomain(inventoryDTO)
@@ -70,8 +76,8 @@ class InventoryService(
             if (lock.isHeldByCurrentThread) {
                 try {
                     lock.unlock()
-                } catch (e: Exception) {
-
+                } catch (ex: Exception) {
+                    logger.error(InternalErrors.REDIS_EXCEPTION.format(ex.message))
                 }
             }
         }
