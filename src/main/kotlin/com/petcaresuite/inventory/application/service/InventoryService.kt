@@ -25,14 +25,14 @@ class InventoryService(
     override fun save(inventoryDTO: InventoryDTO): ResponseDTO {
         val veterinary = inventoryMapper.toDomain(inventoryDTO)
         inventoryPersistencePort.save(veterinary)
-        return ResponseDTO(message = Responses.OWNER_CREATED)
+        return ResponseDTO(message = Responses.INVENTORY_CREATED)
     }
 
     override fun update(inventoryDTO: InventoryDTO): ResponseDTO? {
         val veterinary = inventoryMapper.toDomain(inventoryDTO)
         inventoryPersistencePort.findById(inventoryDTO.inventoryId!!)
         inventoryPersistencePort.update(veterinary)
-        return ResponseDTO(message = Responses.OWNER_UPDATED)
+        return ResponseDTO(message = Responses.INVENTORY_UPDATED)
     }
 
     override fun getAllByFilterPaginated(filterDTO: InventoryFilterDTO, pageable: Pageable): Page<InventoryDTO> {
@@ -61,7 +61,7 @@ class InventoryService(
                     throw InsufficientInventoryException()
                 }
 
-                inventory.quantity = inventoryDTO.quantity
+                inventory.quantity = inventory.quantity!! - inventoryDTO.quantity
                 inventoryPersistencePort.save(inventory)
             }
 
