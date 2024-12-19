@@ -9,5 +9,7 @@ object Modules {
     const val OWNERS = "Owners"
     const val PATIENTS = "Patients"
     const val INVENTORY = "Inventory"
+    const val SERVICE = "Service"
+
 
 }

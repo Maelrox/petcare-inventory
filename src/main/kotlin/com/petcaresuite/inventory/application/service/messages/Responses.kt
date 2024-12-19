@@ -11,4 +11,6 @@ object Responses {
     const val SPECIE_UPDATED = "Specie Updated"
     const val INVENTORY_CREATED = "Inventory Created"
     const val INVENTORY_UPDATED = "Inventory Updated"
+    const val SERVICE_CREATED = "Service Created"
+    const val SERVICE_UPDATED = "Service Updated"
 }
