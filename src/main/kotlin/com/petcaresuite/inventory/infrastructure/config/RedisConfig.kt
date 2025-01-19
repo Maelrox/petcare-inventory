@@ -18,7 +18,7 @@ class RedisConfig(
         val config = Config()
         config.useSingleServer()
             .setAddress("redis://$redisHost:$redisPort")
-            .setPassword(redisPassword)
+          //  .setPassword(redisPassword)
             .setConnectionPoolSize(64)
             .setConnectionMinimumIdleSize(24)
             .setRetryAttempts(3)
